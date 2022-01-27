@@ -6,13 +6,13 @@
 /*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 12:00:29 by nfarfetc          #+#    #+#             */
-/*   Updated: 2022/01/27 16:47:49 by nfarfetc         ###   ########.fr       */
+/*   Updated: 2022/01/27 17:08:34 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	forks_check(t_philos *ph)
+int	take_fork(t_philos *ph)
 {
 	if (ph->cur != ph->ph_nmb - 1 && ph->forks[ph->cur] == 0
 		&& ph->forks[ph->cur + 1] == 0)
@@ -41,13 +41,38 @@ int	forks_check(t_philos *ph)
 	return (0);
 }
 
+int	put_fork(t_philos *ph)
+{
+	if (ph->cur != ph->ph_nmb - 1 && ph->forks[ph->cur] == 1
+		&& ph->forks[ph->cur + 1] == 1)
+	{
+		ph->forks[ph->cur] = 0;
+		ph->forks[ph->cur + 1] = 0;
+		printf("%6zu %d is sleeping!\n", ph->time[ph->cur], ph->cur + 1);
+		ph->is_eat[ph->cur] = 0;
+		ph->time[ph->cur] += ph->time_to_sleep;
+		return (1);
+	}
+	if (ph->cur == ph->ph_nmb - 1 && ph->forks[ph->cur] == 1
+		&& ph->forks[0] == 1)
+	{
+		ph->forks[ph->cur] = 0;
+		ph->forks[ph->cur + 1] = 0;
+		printf("%6zu %d is sleeping!\n", ph->time[ph->cur], ph->cur + 1);
+		ph->is_eat[ph->cur] = 0;
+		ph->time[ph->cur] += ph->time_to_sleep;
+		return (1);
+	}
+	return (0);
+}
+	
 void	*thread_func1(void *philos)
 {
 	t_philos	*ph;
 
 	ph = (t_philos *) philos;
 	pthread_mutex_lock(&ph->mutex[ph->cur]);
-	if (!forks_check(ph))
+	if (!take_fork(ph))
 	{
 		printf("%6zu %d is thinking!\n", ph->time[ph->cur], ph->cur + 1);
 		ph->time[ph->cur] += ph->time_to_eat;
@@ -62,13 +87,10 @@ void	*thread_func2(void *philos)
 
 	ph = (t_philos *) philos;
 	pthread_mutex_lock(&ph->mutex[ph->cur]);
-	if (ph->is_eat[ph->cur])
+	if (!put_fork(ph))
 	{
-		printf("%6zu %d is sleeping!\n", ph->time[ph->cur], ph->cur + 1);
-		ph->time[ph->cur] += ph->time_to_sleep;
+		take_fork(ph);
 	}
-	else if (!ph->is_eat[ph->cur])
-		forks_check(ph);
 	pthread_mutex_unlock(&ph->mutex[ph->cur]);
 	return (NULL);
 }

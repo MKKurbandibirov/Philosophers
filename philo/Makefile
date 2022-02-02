@@ -1,11 +1,11 @@
 NAME		=	philo
 
-SRCS		=	main.c ft_atoi.c
+SRCS		=	main.c ft_atoi.c utils.c init.c end.c
 
 OBJS		=	$(SRCS:.c=.o)
 				
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror -lpthread
+CFLAGS		=	-Wall -Wextra -Werror -pthread
 
 .PHONY		:	all clean fclean re
 

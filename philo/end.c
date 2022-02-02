@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 11:33:33 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/02 11:49:18 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/02 13:12:43 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int join_threads(t_info *info)
     int i;
 
     i = -1;
-    while (++i < info->ph_nmb)
+    while (++i < info->ph_nbr)
     {
         if (pthread_join(info->threads[i], NULL))
             return (1);
@@ -37,7 +37,7 @@ void    mutexes_destroy(t_info *info)
     int i;
 
     i = -1;
-    while (++i < info->ph_nmb)
+    while (++i < info->ph_nbr)
     {
         pthread_mutex_unlock(&info->forks[i]);
         pthread_mutex_destroy(&info->forks[i]);

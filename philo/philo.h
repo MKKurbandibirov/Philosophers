@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 17:03:32 by nfarfetc          #+#    #+#             */
-/*   Updated: 2022/02/02 11:49:05 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/02 13:27:08 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ typedef struct s_philo
 	long			limit_of_life;
 	int				stop;
 	long			start_time;
+	int				nbr_of_eat;
 	pthread_mutex_t	*l_f;
 	pthread_mutex_t	*r_f;
 	struct s_info	*info;
@@ -34,11 +35,11 @@ typedef struct s_philo
 
 typedef struct s_info
 {
-	int				ph_nmb;
+	int				ph_nbr;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
-	int				nmb_to_eat;
+	int				nbr_to_eat;
 	int				dead;
 	long			start_time;
 	pthread_mutex_t	display;
@@ -51,6 +52,7 @@ typedef struct s_info
 
 int		ft_atoi(const char *str);
 long	get_time(void);
+void	smart_sleep(long time);
 int 	validation(int ac, char **av);
 
 void	init_info(int ac, char **av, t_info *info);
@@ -64,4 +66,9 @@ void	*ph_death_controller(void *param);
 int		join_threads(t_info *info);
 void	free_all(t_info *info);
 void	mutexes_destroy(t_info *info);
+
+void    taking_forks(t_philo *philo);
+void    eating(t_philo *philo);
+void    sleeping(t_philo *philo);
+void    thinking(t_philo *philo);
 #endif

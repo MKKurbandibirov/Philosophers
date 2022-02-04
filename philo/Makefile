@@ -5,7 +5,7 @@ SRCS		=	main.c ft_atoi.c utils.c init.c end.c actions.c
 OBJS		=	$(SRCS:.c=.o)
 				
 CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror -pthread
+CFLAGS		=	-Wall -Wextra -Werror -lpthread
 
 .PHONY		:	all clean fclean re
 

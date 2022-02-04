@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/26 17:03:32 by nfarfetc          #+#    #+#             */
-/*   Updated: 2022/02/02 13:27:08 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/03 14:00:22 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,10 @@ typedef struct s_philo
 	int				stop;
 	long			start_time;
 	int				nbr_of_eat;
-	pthread_mutex_t	*l_f;
-	pthread_mutex_t	*r_f;
+	// pthread_mutex_t	*l_f;
+	// pthread_mutex_t	*r_f;
+	int	l_f;
+	int	r_f;
 	struct s_info	*info;
 }	t_philo;
 
@@ -43,7 +45,7 @@ typedef struct s_info
 	int				dead;
 	long			start_time;
 	pthread_mutex_t	display;
-	pthread_t		death_control;
+	pthread_t		*death_control;
 	pthread_t		*threads;
 	pthread_mutex_t	*forks;
 	t_philo			*philos;
@@ -68,7 +70,7 @@ void	free_all(t_info *info);
 void	mutexes_destroy(t_info *info);
 
 void    taking_forks(t_philo *philo);
-void    eating(t_philo *philo);
+int		eating(t_philo *philo);
 void    sleeping(t_philo *philo);
 void    thinking(t_philo *philo);
 #endif

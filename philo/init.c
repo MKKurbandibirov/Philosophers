@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:16:08 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/02 13:13:33 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/03 12:31:15 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,10 @@ int	init_philo(t_info *info)
 		info->philos[i].last_eat = get_time();
 		info->philos[i].limit_of_life = info->time_to_die;///llll
 		info->philos[i].stop = 0;
-		info->philos[i].l_f = &info->forks[info->philos[i].id];
-		info->philos[i].r_f = &info->forks[(info->philos[i].id + 1) % info->ph_nbr];
+		// info->philos[i].l_f = &info->forks[i % info->ph_nbr];
+		// info->philos[i].r_f = &info->forks[(i + 1) % info->ph_nbr];
+		info->philos[i].l_f = i;
+		info->philos[i].r_f = (i + 1) % info->ph_nbr;
 		info->philos[i].info = info;
 	}
 	return (0);
@@ -56,14 +58,17 @@ int	init_threads(t_info *info)
 	int	i;
 
 	info->threads = malloc(sizeof(pthread_t) * info->ph_nbr);
+	info->death_control = malloc(sizeof(pthread_t) * info->ph_nbr);
+	if (!info->threads || !info->death_control)
+		return (1);
 	i = -1;
 	while (++i < info->ph_nbr)
 	{
 		if (pthread_create(&info->threads[i], NULL, ph_process, &info->philos[i]))
 			return (1);
+		// usleep(1000);
 	}
-	pthread_create(&info->death_control, NULL, ph_death_controller, &info->philos);
-	pthread_join(info->death_control, NULL);
+	return (0);
 }
 
 void	init_info(int ac, char **av, t_info *info)

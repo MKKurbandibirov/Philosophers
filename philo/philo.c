@@ -6,11 +6,21 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:21:29 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 13:01:38 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/07 18:38:21 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void	for_one_philo(t_info *info)
+{
+	info->start_time = get_time();
+	print_status(&info->philos[0], info, "has taken a fork!");
+	usleep(info->time_to_die * 1000);
+	print_status(&info->philos[0], info, "is dead!");
+	mutex_destroy(info);
+	free_info(info);
+}
 
 int main(int argc, char **argv)
 {
@@ -25,6 +35,11 @@ int main(int argc, char **argv)
 	{
 		printf("info error!");
 		return (1);
+	}
+	if (info.ph_nbr == 1)
+	{
+		for_one_philo(&info);
+		return (0);
 	}
 	if (create_threads(&info))
 	{

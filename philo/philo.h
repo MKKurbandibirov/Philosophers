@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 13:00:56 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/07 17:42:54 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 typedef struct s_philo
 {
 	int				id;
-	long			last_eat;
+	long long		last_eat;
 	int				nbr_of_ate;
 	int				l_f;
 	int				r_f;

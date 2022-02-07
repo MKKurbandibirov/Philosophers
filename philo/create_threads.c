@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 12:54:48 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/07 18:30:46 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,31 @@ static void	*control(void *param)
 
 	ph = (t_philo *)param;
 	info = ph->info;
-	while (1)
+	if (info->nbr_to_eat > 0)
 	{
-		time = delta_time(ph->last_eat);
-		if (time > info->time_to_die);
-			info->is_dead = 1;
-		return (NULL);
+		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
+		{
+			time = delta_time(ph->last_eat);
+			if (time > info->time_to_die)
+			{
+				print_status(ph, info, "is dead!");
+				info->is_dead = 1;
+				return (NULL);
+			}
+		}
+	}
+	else
+	{
+		while (!info->is_dead)
+		{
+			time = delta_time(ph->last_eat);
+			if (time > info->time_to_die)
+			{
+				print_status(ph, info, "is dead!");
+				info->is_dead = 1;
+				return (NULL);
+			}
+		}
 	}
 	return (NULL);
 }
@@ -51,16 +70,20 @@ static void	*routine(void *param)
 
 	ph = (t_philo *)param;
 	info = ph->info;
-	if (pthread_create(&ph->control, NULL, control, (void *)&ph))
+	if (pthread_create(&ph->control, NULL, control, (void *)ph))
 		return (NULL);
 	pthread_detach(ph->control);
-	while (!info->is_dead)
+	if (info->nbr_to_eat > 0)
 	{
-		if (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-		{
+		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
 			if (routine_exe(ph, info))
 				break ;
-		}	
+	}
+	else
+	{
+		while (!info->is_dead)
+			if  (routine_exe(ph, info))
+				break ;
 	}
 	return (NULL);
 }
@@ -79,6 +102,7 @@ int create_threads(t_info *info)
 			printf("Couldn't create thread!\n");
 			return (1);
 		}
+		usleep(1000);
 		i++;
 	}
 	i = 0;

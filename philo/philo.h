@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/01/26 17:03:32 by nfarfetc          #+#    #+#             */
-/*   Updated: 2022/02/03 14:00:22 by nfarfetc         ###   ########.fr       */
+/*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
+/*   Updated: 2022/02/07 13:00:56 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,60 +17,66 @@
 # include <stdlib.h>
 # include <pthread.h>
 # include <unistd.h>
-# include <string.h>
 # include <sys/time.h>
 
+/*
+** Structures
+*/
 typedef struct s_philo
 {
 	int				id;
 	long			last_eat;
-	long			limit_of_life;
-	int				stop;
-	long			start_time;
-	int				nbr_of_eat;
-	// pthread_mutex_t	*l_f;
-	// pthread_mutex_t	*r_f;
-	int	l_f;
-	int	r_f;
+	int				nbr_of_ate;
+	int				l_f;
+	int				r_f;
+	pthread_t		thread;
+	pthread_t		control;
 	struct s_info	*info;
 }	t_philo;
 
 typedef struct s_info
 {
 	int				ph_nbr;
-	long			time_to_die;
-	long			time_to_eat;
-	long			time_to_sleep;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
 	int				nbr_to_eat;
-	int				dead;
+	int				is_dead;
 	long			start_time;
-	pthread_mutex_t	display;
-	pthread_t		*death_control;
-	pthread_t		*threads;
+	pthread_mutex_t	write;
 	pthread_mutex_t	*forks;
 	t_philo			*philos;
 }	t_info;
 
+/*
+** Utils functions
+*/
+int			ft_atoi(const char *str);
+int			validation(int ac, char **av);
 
-int		ft_atoi(const char *str);
-long	get_time(void);
-void	smart_sleep(long time);
-int 	validation(int ac, char **av);
+/*
+** Init and create functions
+*/
+int			create_info(int ac, char **av, t_info *info);
+int			create_threads(t_info *info);
 
-void	init_info(int ac, char **av, t_info *info);
-int		init_philo(t_info *info);
-int		init_mutexes(t_info *info);
-int		init_threads(t_info *info);
+/*
+** Time handling functions
+*/
+long long	get_time(void);
+long long	delta_time(long long time);
 
-void	*ph_process(void *param);
-void	*ph_death_controller(void *param);
+/*
+** Action functions
+*/
+int			eating(t_philo *ph, t_info *info);
+int			sleeping(t_philo *ph, t_info *info);
+int			thinking(t_philo *ph, t_info *info);
+int			print_status(t_philo *ph, t_info *info, char *status);
 
-int		join_threads(t_info *info);
-void	free_all(t_info *info);
-void	mutexes_destroy(t_info *info);
-
-void    taking_forks(t_philo *philo);
-int		eating(t_philo *philo);
-void    sleeping(t_philo *philo);
-void    thinking(t_philo *philo);
+/*
+** Free and Destry functions
+*/
+void	mutex_destroy(t_info *info);
+void	free_info(t_info *info);
 #endif

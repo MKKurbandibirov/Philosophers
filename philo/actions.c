@@ -3,72 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
+/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/02 12:55:03 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/03 14:10:20 by nfarfetc         ###   ########.fr       */
+/*   Created: 2022/02/07 10:05:12 by magomed           #+#    #+#             */
+/*   Updated: 2022/02/07 11:05:47 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// void	taking_forks(t_philo *philo)
-// {
-// 	pthread_mutex_lock(philo->l_f);
-// 	pthread_mutex_lock(philo->r_f);
-// 	pthread_mutex_lock(&philo->info->display);
-// 	if (philo->stop != 1)
-// 	{
-// 		printf("%ld %d has taking a fork!\n",
-// 			get_time() - philo->start_time, philo->id + 1);
-// 		printf("%ld %d has taking a fork!\n",
-// 			get_time() - philo->start_time, philo->id + 1);
-// 	}
-// }
-
-int	eating(t_philo *philo)
+int eating(t_philo *ph, t_info *info)
 {
-	// pthread_mutex_lock(philo->l_f);
-	// pthread_mutex_lock(philo->r_f);
-	pthread_mutex_lock(&philo->info->forks[philo->l_f]);
-	pthread_mutex_lock(&philo->info->forks[philo->r_f]);
-	pthread_mutex_lock(&philo->info->display);
-	if (philo->stop != 1)
-	{
-		printf("%ld %d has taking a fork! %d\n",
-			get_time() - philo->start_time, philo->id + 1, philo->l_f);
-		if (philo->info->ph_nbr == 1)
-			return (1);
-		printf("%ld %d has taking a fork!%d\n",
-			get_time() - philo->start_time, philo->id + 1, philo->r_f);
-	}
-	printf("%ld %d is eating!\n",
-		get_time() - philo->start_time, philo->id + 1);
-	pthread_mutex_unlock(&philo->info->display);
-	philo->nbr_of_eat += 1;
-	philo->last_eat = get_time();
-	usleep(philo->info->time_to_eat * 1000);
-	smart_sleep(philo->info->time_to_eat);
-	pthread_mutex_unlock(&philo->info->forks[philo->r_f]);
-	pthread_mutex_unlock(&philo->info->forks[philo->l_f]);
-	// pthread_mutex_unlock(philo->l_f);
-	// pthread_mutex_unlock(philo->r_f);
+	if (pthread_mutex_lock(&info->forks[ph->l_f]))
+		return (1);
+	if (print_status(ph, info, "has taken a fork!"))
+		return (1);
+	if (pthread_mutex_lock(&info->forks[ph->r_f]))
+		return (1);
+	if (print_status(ph, info, "has taken a fork!"))
+		return (1);
+	if (print_status(ph, info, "is eating!"))
+		return (1);
+	ph->last_eat = get_time();
+	usleep(info->time_to_eat * 1000);
+	if (pthread_mutex_unlock(&info->forks[ph->l_f]))
+		return (1);
+	if (pthread_mutex_unlock(&info->forks[ph->r_f]))
+		return (1);
+	ph->nbr_of_ate++;
 	return (0);
 }
 
-void    sleeping(t_philo *philo)
+int	sleeping(t_philo *ph, t_info *info)
 {
-    pthread_mutex_lock(&philo->info->display);
-    printf("%ld %d is sleeping!\n",
-        get_time() - philo->start_time, philo->id + 1);
-    pthread_mutex_unlock(&philo->info->display);
-    usleep (philo->info->time_to_sleep * 1000);
+	if (print_status(ph, info, "is sleeping!"))
+		return (1);
+	usleep(info->time_to_sleep * 1000);
+	return (0);
 }
 
-void    thinking(t_philo *philo)
+int	thinking(t_philo *ph, t_info *info)
 {
-    pthread_mutex_lock(&philo->info->display);
-    printf("%ld %d is thinking!\n",
-        get_time() - philo->start_time, philo->id + 1);
-    pthread_mutex_unlock(&philo->info->display);
+	return (print_status(ph, info, "is thinking!"));
+}
+
+int	print_status(t_philo *ph, t_info *info, char *status)
+{
+	if (info->is_dead)
+		return (1);
+	if (pthread_mutex_lock(&info->write))
+		return (1);
+	printf("%-10lld %d %s\n", delta_time(info->start_time), ph->id, status);
+	if (pthread_mutex_unlock(&info->write))
+		return (1);
 }

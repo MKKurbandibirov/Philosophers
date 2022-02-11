@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:25:53 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:27:22 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/11 09:10:59 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ static int	init_forks(t_info *info)
 {
 	sem_unlink("forks");
 	sem_unlink("write");
+	sem_unlink("main_lock");
 	info->forks = sem_open("forks", O_CREAT | O_EXCL, S_IRWXU, info->ph_nbr);
 	info->write = sem_open("write", O_CREAT | O_EXCL, S_IRWXU, 1);
+	info->main_lock = sem_open("main_lock", O_CREAT | O_EXCL, S_IRWXU, 0);
 	return (0);
 }
 

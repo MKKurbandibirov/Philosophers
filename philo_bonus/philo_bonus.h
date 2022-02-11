@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:20:40 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/11 08:58:45 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_info
 	int				nbr_to_eat;
 	int				is_dead;
 	long			start_time;
+	sem_t			*main_lock;
 	sem_t			*write;
 	sem_t			*forks;
 	t_philo			*philos;

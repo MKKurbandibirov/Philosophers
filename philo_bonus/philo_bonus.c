@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:21:29 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:40:22 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/11 09:02:22 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,6 @@ int main(int argc, char **argv)
 		return (1);
 	}
 	// mutex_destroy(&info);
-	free_info(&info);
+	// free_info(&info);
 	return (0);
 }

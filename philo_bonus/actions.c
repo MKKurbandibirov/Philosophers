@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 10:05:12 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:35:51 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/11 09:15:33 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,14 @@ int	thinking(t_philo *ph, t_info *info)
 
 int	print_status(t_philo *ph, t_info *info, char *status)
 {
-	if (info->is_dead)
-		return (1);
 	sem_wait(info->write);
 	printf("%-10lld %d %s\n", delta_time(info->start_time), ph->id, status);
 	sem_post(info->write);
+	if (info->is_dead)
+	{
+		sem_post(info->main_lock);
+		sem_wait(info->write);
+		return (1);
+	}
 	return (0);
 }

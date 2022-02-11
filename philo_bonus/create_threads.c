@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:42:24 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/11 09:16:37 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static void	*control(void *param)
 			time = delta_time(ph->last_eat);
 			if (time > info->time_to_die)
 			{
-				print_status(ph, info, "is dead!");
 				info->is_dead = 1;
+				print_status(ph, info, "is dead!");
 				return (NULL);
 			}
 		}
@@ -54,8 +54,8 @@ static void	*control(void *param)
 			time = delta_time(ph->last_eat);
 			if (time > info->time_to_die)
 			{
-				print_status(ph, info, "is dead!");
 				info->is_dead = 1;
+				print_status(ph, info, "is dead!");
 				return (NULL);
 			}
 		}
@@ -107,15 +107,8 @@ int create_threads(t_info *info)
 		{
 			routine((void *)&info->philos[i]);
 		}
-		usleep(1000);
 		i++;
 	}
-	i = 0;
-	while (i < info->ph_nbr)
-	{
-		// kill(info->philos[i].pid, SIGKILL);
-		waitpid(info->philos[i].pid, NULL, 0);
-		i++;
-	}
+	sem_wait(info->main_lock);
 	return (0);
 }

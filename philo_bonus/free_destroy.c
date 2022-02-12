@@ -6,27 +6,18 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 12:55:15 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/09 20:40:03 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:12:01 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-// void	mutex_destroy(t_info *info)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (i < info->ph_nbr)
-// 	{
-// 		pthread_mutex_destroy(&info->forks[i]);
-// 		i++;
-// 	}
-// 	pthread_mutex_destroy(&info->write);
-// }
-
-void	free_info(t_info *info)
+void	close_destroy(t_info *info)
 {
-	free(info->forks);
-	free(info->philos);
+	sem_close(info->forks);
+	sem_destroy(info->forks);
+	sem_close(info->write);
+	sem_destroy(info->write);
+	sem_close(info->main_lock);
+	sem_destroy(info->main_lock);
 }

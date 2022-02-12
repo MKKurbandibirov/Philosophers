@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/11 08:58:45 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:41:29 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef struct s_info
 }	t_info;
 
 /*
-** Utils functions
+** Validation functions
 */
 int			ft_atoi(const char *str);
 int			validation(int ac, char **av);
@@ -64,8 +64,9 @@ int			create_info(int ac, char **av, t_info *info);
 int			create_threads(t_info *info);
 
 /*
-** Time handling functions
+** Utils functions
 */
+int			check_death(t_philo *ph, t_info *info);
 long long	get_time(void);
 long long	delta_time(long long time);
 
@@ -80,6 +81,6 @@ int			print_status(t_philo *ph, t_info *info, char *status);
 /*
 ** Free and Destry functions
 */
-void	mutex_destroy(t_info *info);
-void	free_info(t_info *info);
+void		close_destroy(t_info *info);
+void		free_info(t_info *info);
 #endif

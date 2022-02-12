@@ -6,17 +6,17 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/11 09:16:37 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 10:44:31 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static int	routine_exe(t_philo *ph,  t_info *info)
+static int	routine_exe(t_philo *ph, t_info *info)
 {
 	if (eating(ph, info))
 		return (1);
-	if (ph->nbr_of_ate != info->nbr_to_eat)
+	if (ph->nbr_of_ate < info->nbr_to_eat)
 	{
 		if (sleeping(ph, info))
 			return (1);
@@ -28,44 +28,31 @@ static int	routine_exe(t_philo *ph,  t_info *info)
 
 static void	*control(void *param)
 {
-	t_philo 	*ph;
+	t_philo		*ph;
 	t_info		*info;
-	long long	time;
 
 	ph = (t_philo *)param;
 	info = ph->info;
 	if (info->nbr_to_eat > 0)
 	{
 		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-		{
-			time = delta_time(ph->last_eat);
-			if (time > info->time_to_die)
-			{
-				info->is_dead = 1;
-				print_status(ph, info, "is dead!");
+			if (check_death(ph, info))
 				return (NULL);
-			}
-		}
 	}
 	else
 	{
 		while (!info->is_dead)
-		{
-			time = delta_time(ph->last_eat);
-			if (time > info->time_to_die)
-			{
-				info->is_dead = 1;
-				print_status(ph, info, "is dead!");
+			if (check_death(ph, info))
 				return (NULL);
-			}
-		}
 	}
+	sem_post(info->main_lock);
+	sem_wait(info->write);
 	return (NULL);
 }
 
 static void	routine(void *param)
 {
-	t_philo *ph;
+	t_philo	*ph;
 	t_info	*info;
 
 	ph = (t_philo *)param;
@@ -82,13 +69,13 @@ static void	routine(void *param)
 	else
 	{
 		while (!info->is_dead)
-			if  (routine_exe(ph, info))
+			if (routine_exe(ph, info))
 				break ;
 	}
 	exit(EXIT_SUCCESS);
 }
 
-int create_threads(t_info *info)
+int	create_threads(t_info *info)
 {
 	int	i;
 

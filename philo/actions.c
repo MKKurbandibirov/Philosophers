@@ -6,13 +6,13 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 10:05:12 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 18:29:56 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 09:42:03 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int eating(t_philo *ph, t_info *info)
+int	eating(t_philo *ph, t_info *info)
 {
 	if (pthread_mutex_lock(&info->forks[ph->l_f]))
 		return (1);

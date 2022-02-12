@@ -6,7 +6,7 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:21:29 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 18:38:21 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 09:45:56 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ static void	for_one_philo(t_info *info)
 	free_info(info);
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_info  info;
+	t_info	info;
 
 	if (validation(argc, argv))
 	{

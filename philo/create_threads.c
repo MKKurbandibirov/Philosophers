@@ -6,13 +6,13 @@
 /*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/07 18:30:46 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/12 09:57:09 by magomed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static int	routine_exe(t_philo *ph,  t_info *info)
+static int	routine_exe(t_philo *ph, t_info *info)
 {
 	if (eating(ph, info))
 		return (1);
@@ -28,44 +28,29 @@ static int	routine_exe(t_philo *ph,  t_info *info)
 
 static void	*control(void *param)
 {
-	t_philo 	*ph;
+	t_philo		*ph;
 	t_info		*info;
-	long long	time;
 
 	ph = (t_philo *)param;
 	info = ph->info;
 	if (info->nbr_to_eat > 0)
 	{
 		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-		{
-			time = delta_time(ph->last_eat);
-			if (time > info->time_to_die)
-			{
-				print_status(ph, info, "is dead!");
-				info->is_dead = 1;
+			if (check_death(ph, info))
 				return (NULL);
-			}
-		}
 	}
 	else
 	{
 		while (!info->is_dead)
-		{
-			time = delta_time(ph->last_eat);
-			if (time > info->time_to_die)
-			{
-				print_status(ph, info, "is dead!");
-				info->is_dead = 1;
+			if (check_death(ph, info))
 				return (NULL);
-			}
-		}
 	}
 	return (NULL);
 }
 
 static void	*routine(void *param)
 {
-	t_philo *ph;
+	t_philo	*ph;
 	t_info	*info;
 
 	ph = (t_philo *)param;
@@ -82,38 +67,36 @@ static void	*routine(void *param)
 	else
 	{
 		while (!info->is_dead)
-			if  (routine_exe(ph, info))
+			if (routine_exe(ph, info))
 				break ;
 	}
 	return (NULL);
 }
 
-int create_threads(t_info *info)
+int	create_threads(t_info *info)
 {
 	int	i;
 
-	i = 0;
+	i = -1;
 	info->start_time = get_time();
-	while (i < info->ph_nbr)
+	while (++i < info->ph_nbr)
 	{
 		if (pthread_create(&info->philos[i].thread, NULL,
-			routine, (void *)&info->philos[i]))
+				routine, (void *)&info->philos[i]))
 		{
 			printf("Couldn't create thread!\n");
 			return (1);
 		}
 		usleep(1000);
-		i++;
 	}
-	i = 0;
-	while (i < info->ph_nbr)
+	i = -1;
+	while (++i < info->ph_nbr)
 	{
 		if (pthread_join(info->philos[i].thread, NULL))
 		{
 			printf("Couldn't join thread!\n");
 			return (1);
 		}
-		i++;
 	}
 	return (0);
 }

@@ -1,6 +1,6 @@
 NAME		=	philo
 
-SRCS		=	ft_atoi.c philo.c handling_errors.c create_info.c\
+SRCS		=	philo.c handling_errors.c create_info.c\
 				create_threads.c utils.c actions.c free_destroy.c
 
 OBJS		=	$(SRCS:.c=.o)

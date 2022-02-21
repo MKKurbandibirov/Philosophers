@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:56:10 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 09:54:42 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/21 14:41:16 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	get_time(void)
+time_t	get_time(void)
 {
 	struct timeval	time;
 
@@ -20,11 +20,21 @@ long long	get_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec * 0.001));
 }
 
-long long	delta_time(long long time)
+time_t	delta_time(time_t time)
 {
 	if (time > 0)
 		return (get_time() - time);
 	return (0);
+}
+
+void	ft_usleep(time_t ms)
+{
+	time_t	time;
+
+	time = get_time();
+	usleep(ms * 920);
+	while (get_time() < time + ms)
+		usleep(ms * 3);
 }
 
 int	check_death(t_philo *ph, t_info *info)

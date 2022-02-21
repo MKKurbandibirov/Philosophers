@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_threads.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 09:57:09 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/21 15:19:34 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,12 @@ static void	*control(void *param)
 
 	ph = (t_philo *)param;
 	info = ph->info;
-	if (info->nbr_to_eat > 0)
+	while (!info->is_dead)
 	{
-		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-			if (check_death(ph, info))
-				return (NULL);
-	}
-	else
-	{
-		while (!info->is_dead)
-			if (check_death(ph, info))
-				return (NULL);
+		if (info->nbr_to_eat == ph->nbr_of_ate)
+			break ;
+		if (check_death(ph, info))
+			break ;
 	}
 	return (NULL);
 }
@@ -58,17 +53,12 @@ static void	*routine(void *param)
 	if (pthread_create(&ph->control, NULL, control, (void *)ph))
 		return (NULL);
 	pthread_detach(ph->control);
-	if (info->nbr_to_eat > 0)
+	while (!info->is_dead)
 	{
-		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-			if (routine_exe(ph, info))
-				break ;
-	}
-	else
-	{
-		while (!info->is_dead)
-			if (routine_exe(ph, info))
-				break ;
+		if (info->nbr_to_eat == ph->nbr_of_ate)
+			break ;
+		if (routine_exe(ph, info))
+			break ;
 	}
 	return (NULL);
 }
@@ -87,7 +77,7 @@ int	create_threads(t_info *info)
 			printf("Couldn't create thread!\n");
 			return (1);
 		}
-		usleep(1000);
+		ft_usleep(1);
 	}
 	i = -1;
 	while (++i < info->ph_nbr)

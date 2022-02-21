@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 09:55:10 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/21 15:34:06 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 typedef struct s_philo
 {
 	int				id;
-	long long		last_eat;
+	time_t			last_eat;
 	int				nbr_of_ate;
 	int				l_f;
 	int				r_f;
@@ -37,12 +37,12 @@ typedef struct s_philo
 typedef struct s_info
 {
 	int				ph_nbr;
-	long long		time_to_die;
-	long long		time_to_eat;
-	long long		time_to_sleep;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
 	int				nbr_to_eat;
 	int				is_dead;
-	long			start_time;
+	time_t			start_time;
 	pthread_mutex_t	write;
 	pthread_mutex_t	*forks;
 	t_philo			*philos;
@@ -64,8 +64,9 @@ int			create_threads(t_info *info);
 ** Utils functions
 */
 int			check_death(t_philo *ph, t_info *info);
-long long	get_time(void);
-long long	delta_time(long long time);
+time_t		get_time(void);
+time_t		delta_time(time_t time);
+void		ft_usleep(time_t ms);
 
 /*
 ** Action functions

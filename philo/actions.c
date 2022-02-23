@@ -6,7 +6,7 @@
 /*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 10:05:12 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/21 15:19:46 by nfarfetc         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:57:56 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	print_status(t_philo *ph, t_info *info, char *status)
 	pthread_mutex_lock(&info->write);
 	if (info->is_dead)
 	{
-		pthread_mutex_unlock(&info->write);	
+		pthread_mutex_unlock(&info->write);
 		return (1);
 	}
 	printf("%-10ld %d %s\n", delta_time(info->start_time), ph->id, status);

@@ -1,12 +1,14 @@
 NAME		=	philo_bonus
 
-SRCS		=	ft_atoi.c philo_bonus.c handling_errors.c create_info.c\
-				create_threads.c utils.c actions.c free_destroy.c
+HEAD		=	philo_bonus.h
+
+SRCS		=	philo_bonus.c handling_errors.c create_info.c\
+				create_process.c utils.c actions.c free_destroy.c
 
 OBJS		=	$(SRCS:.c=.o)
 				
 CC			=	gcc 
-CFLAGS		=	-Wall -Wextra -Werror -g -pthread
+CFLAGS		=	-Wall -Wextra -Werror -pthread -I $(HEAD)
 
 .PHONY		:	all clean fclean re
 
@@ -15,8 +17,8 @@ all			:	$(NAME)
 %.o:			%.c
 	@$(CC) $(FLAGS) -c $< -o $@
 
-$(NAME) 	:	$(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) $(MLX_LNK) -lm -o $(NAME)
+$(NAME) 	:	$(OBJS) $(HEAD)
+	@$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 clean		:	
 	@rm -f $(OBJS) $(OBJS_B)

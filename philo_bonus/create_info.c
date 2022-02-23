@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   create_info.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:25:53 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 10:45:23 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:41:03 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	init_philos(t_info *info)
 	return (0);
 }
 
-static int	init_forks(t_info *info)
+static void	init_sem(t_info *info)
 {
 	sem_unlink("forks");
 	sem_unlink("write");
@@ -39,6 +39,39 @@ static int	init_forks(t_info *info)
 	info->forks = sem_open("forks", O_CREAT | O_EXCL, S_IRWXU, info->ph_nbr);
 	info->write = sem_open("write", O_CREAT | O_EXCL, S_IRWXU, 1);
 	info->main_lock = sem_open("main_lock", O_CREAT | O_EXCL, S_IRWXU, 0);
+	if (info->nbr_to_eat > 0)
+	{
+		sem_unlink("eat_enough");
+		info->eat_enough = sem_open("eat_enough", O_CREAT | O_EXCL, S_IRWXU, 0);
+	}
+}
+
+static void	*eat_control(void *param)
+{
+	t_info	*info;
+	int		i;
+
+	info = (t_info *)param;
+	i = -1;
+	sem_wait(info->write);
+	while (++i < info->ph_nbr)
+	{
+		sem_post(info->write);
+		sem_wait(info->eat_enough);
+		sem_wait(info->write);
+	}
+	sem_post(info->main_lock);
+	return (NULL);
+}
+
+static int	init_eat_control(t_info *info)
+{
+	if (info->nbr_to_eat > 0)
+	{
+		if (pthread_create(&info->eating_check, NULL, &eat_control, info))
+			return (1);
+		pthread_detach(info->eating_check);
+	}
 	return (0);
 }
 
@@ -52,9 +85,10 @@ int	create_info(int ac, char **av, t_info *info)
 	if (ac == 6)
 		info->nbr_to_eat = ft_atoi(av[5]);
 	info->is_dead = 0;
-	if (init_forks(info))
-		return (1);
+	init_sem(info);
 	if (init_philos(info))
+		return (1);
+	if (init_eat_control(info))
 		return (1);
 	return (0);
 }

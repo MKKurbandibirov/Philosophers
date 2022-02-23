@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_threads.c                                   :+:      :+:    :+:   */
+/*   create_process.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:47:07 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 10:44:31 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:50:26 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-static int	routine_exe(t_philo *ph, t_info *info)
-{
-	if (eating(ph, info))
-		return (1);
-	if (ph->nbr_of_ate < info->nbr_to_eat)
-	{
-		if (sleeping(ph, info))
-			return (1);
-		if (thinking(ph, info))
-			return (1);
-	}
-	return (0);
-}
 
 static void	*control(void *param)
 {
@@ -33,49 +19,32 @@ static void	*control(void *param)
 
 	ph = (t_philo *)param;
 	info = ph->info;
-	if (info->nbr_to_eat > 0)
+	while (!info->is_dead)
 	{
-		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-			if (check_death(ph, info))
-				return (NULL);
-	}
-	else
-	{
-		while (!info->is_dead)
-			if (check_death(ph, info))
-				return (NULL);
+		if (check_death(ph, info))
+			break ;
 	}
 	sem_post(info->main_lock);
 	sem_wait(info->write);
-	return (NULL);
+	exit(EXIT_FAILURE);
 }
 
-static void	routine(void *param)
+static void	routine(t_philo *ph, t_info *info)
 {
-	t_philo	*ph;
-	t_info	*info;
-
-	ph = (t_philo *)param;
-	info = ph->info;
 	if (pthread_create(&ph->control, NULL, control, (void *)ph))
 		exit(EXIT_FAILURE);
 	pthread_detach(ph->control);
-	if (info->nbr_to_eat > 0)
+	while (!info->is_dead)
 	{
-		while (info->nbr_to_eat > ph->nbr_of_ate && !info->is_dead)
-			if (routine_exe(ph, info))
-				break ;
-	}
-	else
-	{
-		while (!info->is_dead)
-			if (routine_exe(ph, info))
-				break ;
+		if (eating(ph, info))
+			break ;
+		sleeping(ph, info);
+		thinking(ph, info);
 	}
 	exit(EXIT_SUCCESS);
 }
 
-int	create_threads(t_info *info)
+int	create_process(t_info *info)
 {
 	int	i;
 
@@ -91,9 +60,7 @@ int	create_threads(t_info *info)
 			return (1);
 		}
 		else if (info->philos[i].pid == 0)
-		{
-			routine((void *)&info->philos[i]);
-		}
+			routine(&info->philos[i], info);
 		i++;
 	}
 	sem_wait(info->main_lock);

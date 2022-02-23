@@ -6,7 +6,7 @@
 /*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:25:53 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/21 15:19:39 by nfarfetc         ###   ########.fr       */
+/*   Updated: 2022/02/21 15:52:41 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	init_philos(t_info *info)
 	return (0);
 }
 
-static int	init_forks(t_info *info)
+static int	init_sem(t_info *info)
 {
 	int	i;
 
@@ -63,7 +63,7 @@ int	create_info(int ac, char **av, t_info *info)
 	if (ac == 6)
 		info->nbr_to_eat = ft_atoi(av[5]);
 	info->is_dead = 0;
-	if (init_forks(info))
+	if (init_sem(info))
 		return (1);
 	if (pthread_mutex_init(&info->write, NULL))
 		return (1);

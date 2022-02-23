@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: magomed <magomed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:21:29 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/12 09:45:56 by magomed          ###   ########.fr       */
+/*   Updated: 2022/02/23 10:46:45 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,25 +27,16 @@ int	main(int argc, char **argv)
 	t_info	info;
 
 	if (validation(argc, argv))
-	{
-		printf("valid error!");
 		return (1);
-	}
 	if (create_info(argc, argv, &info))
-	{
-		printf("info error!");
 		return (1);
-	}
 	if (info.ph_nbr == 1)
 	{
 		for_one_philo(&info);
 		return (0);
 	}
-	if (create_threads(&info))
-	{
-		printf("threads error");
+	if (create_process(&info))
 		return (1);
-	}
 	mutex_destroy(&info);
 	free_info(&info);
 	return (0);

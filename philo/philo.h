@@ -6,7 +6,7 @@
 /*   By: nfarfetc <nfarfetc@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/07 09:18:59 by magomed           #+#    #+#             */
-/*   Updated: 2022/02/21 15:34:06 by nfarfetc         ###   ########.fr       */
+/*   Updated: 2022/02/23 10:46:45 by nfarfetc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int			validation(int ac, char **av);
 ** Init and create functions
 */
 int			create_info(int ac, char **av, t_info *info);
-int			create_threads(t_info *info);
+int			create_process(t_info *info);
 
 /*
 ** Utils functions
